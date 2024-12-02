@@ -29,10 +29,17 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
+      - name: Build HTML
+        run: |
+          # Add your build commands here, for example:
+          # npm install
+          # npm run build
+          echo "Building HTML files..."; cp speeedReadingTool.html index.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: '.'
+          path: 'path/to/your/html/files'
 
       - name: Deploy to GitHub Pages
         id: deployment
