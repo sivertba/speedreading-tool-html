@@ -33,6 +33,15 @@
             background-color: #333333;
             color: #ffffff;
         }
+        #display {
+            font-size: 2em;
+            text-align: center;
+            min-height: 60px;
+            margin: 20px 0;
+        }
+        .centered-vowel {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -75,7 +84,7 @@
                     clearInterval(interval);
                     return;
                 }
-                document.getElementById("display").innerText = words[index++];
+                document.getElementById("display").innerHTML = highlightCentermostVowel(words[index++]);
             }, intervalTime);
         }
 
@@ -97,6 +106,33 @@
         document.getElementById('darkModeToggle').addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
         });
+
+        function findCentermostVowel(word) {
+            const vowels = 'aeiouAEIOU';
+            let vowelPositions = [];
+            
+            // Find all vowel positions
+            for (let i = 0; i < word.length; i++) {
+                if (vowels.includes(word[i])) {
+                    vowelPositions.push(i);
+                }
+            }
+            
+            if (vowelPositions.length === 0) return -1;
+            
+            // Find the vowel closest to center
+            const center = word.length / 2;
+            return vowelPositions.reduce((closest, current) => 
+                Math.abs(current - center) < Math.abs(closest - center) ? current : closest
+            );
+        }
+
+        function highlightCentermostVowel(word) {
+            const vowelIndex = findCentermostVowel(word);
+            if (vowelIndex === -1) return word;
+            
+            return `${word.substring(0, vowelIndex)}<span class="centered-vowel">${word[vowelIndex]}</span>${word.substring(vowelIndex + 1)}`;
+        }
     </script>
 </body>
 </html>
