@@ -38,9 +38,24 @@
             text-align: center;
             min-height: 60px;
             margin: 20px 0;
+            position: relative;
+            white-space: pre;  /* Preserve spaces */
         }
         .centered-vowel {
             text-decoration: underline;
+        }
+        #guide {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-bottom: 2px solid red;
+            width: 20px;
+            pointer-events: none;
+        }
+        .word-container {
+            display: inline-block;
+            position: relative;
         }
     </style>
 </head>
@@ -51,6 +66,7 @@
     <button onclick="togglePause()">Pause</button>
     <button id="darkModeToggle">Toggle Mode</button>
     <div id="display"></div>
+    <div id="guide"></div>
     <label for="speed">Words per minute:</label>
     <input id="speed" type="number" value="200" min="50" step="50">
 
@@ -131,8 +147,15 @@
             const vowelIndex = findCentermostVowel(word);
             if (vowelIndex === -1) return word;
             
-            return `${word.substring(0, vowelIndex)}<span class="centered-vowel">${word[vowelIndex]}</span>${word.substring(vowelIndex + 1)}`;
+            // Calculate padding needed to center the vowel
+            const leftPadding = " ".repeat(Math.max(0, 20 - vowelIndex));
+            const rightPadding = " ".repeat(Math.max(0, 20 - (word.length - vowelIndex - 1)));
+            
+            return `<div class="word-container">${leftPadding}${word.substring(0, vowelIndex)}<span class="centered-vowel">${word[vowelIndex]}</span>${word.substring(vowelIndex + 1)}${rightPadding}</div>`;
         }
+
+        // Update your display style:
+        document.getElementById("display").style.fontFamily = "monospace";
     </script>
 </body>
 </html>
