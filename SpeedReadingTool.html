@@ -39,7 +39,7 @@
     <h1>Speed Reading Tool</h1>
     <textarea id="inputText" placeholder="Paste your text here..."></textarea><br>
     <button onclick="startReading()">Start Reading</button>
-    <button onclick="stopReading()">Stop</button>
+    <button onclick="togglePause()">Pause</button>
     <button id="darkModeToggle">Toggle Mode</button>
     <div id="display"></div>
     <label for="speed">Words per minute:</label>
@@ -49,6 +49,8 @@
         let words = [];
         let index = 0;
         let interval = null;
+        let isPaused = false;
+        let pausedIndex = 0;
 
         function startReading() {
             const text = document.getElementById("inputText").value;
@@ -59,8 +61,14 @@
 
             words = text.split(/\s+/);
             index = 0;
+            isPaused = false;
+            document.querySelector('button[onclick="togglePause()"]').textContent = 'Pause';
+            startInterval();
+        }
+
+        function startInterval() {
             const speed = parseInt(document.getElementById("speed").value, 10);
-            const intervalTime = 60000 / speed; // Calculate interval in milliseconds
+            const intervalTime = 60000 / speed;
             clearInterval(interval);
             interval = setInterval(() => {
                 if (index >= words.length) {
@@ -71,9 +79,19 @@
             }, intervalTime);
         }
 
-        function stopReading() {
-            clearInterval(interval);
-            document.getElementById("display").innerText = "";
+        function togglePause() {
+            isPaused = !isPaused;
+            const pauseButton = document.querySelector('button[onclick="togglePause()"]');
+            
+            if (isPaused) {
+                clearInterval(interval);
+                pausedIndex = index;
+                pauseButton.textContent = 'Resume';
+            } else {
+                index = pausedIndex;
+                pauseButton.textContent = 'Pause';
+                startInterval();
+            }
         }
 
         document.getElementById('darkModeToggle').addEventListener('click', () => {
