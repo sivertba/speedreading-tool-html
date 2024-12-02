@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Reading Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        #display {
+            font-size: 2em;
+            margin: 20px 0;
+            height: 50px;
+        }
+        textarea {
+            width: 80%;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Speed Reading Tool</h1>
+    <textarea id="inputText" placeholder="Paste your text here..."></textarea><br>
+    <button onclick="startReading()">Start Reading</button>
+    <button onclick="stopReading()">Stop</button>
+    <div id="display"></div>
+    <label for="speed">Words per minute:</label>
+    <input id="speed" type="number" value="200" min="50" step="50">
+
+    <script>
+        let words = [];
+        let index = 0;
+        let interval = null;
+
+        function startReading() {
+            const text = document.getElementById("inputText").value;
+            if (!text.trim()) {
+                alert("Please paste some text to read.");
+                return;
+            }
+
+            words = text.split(/\s+/);
+            index = 0;
+            const speed = parseInt(document.getElementById("speed").value, 10);
+            const intervalTime = 60000 / speed; // Calculate interval in milliseconds
+            clearInterval(interval);
+            interval = setInterval(() => {
+                if (index >= words.length) {
+                    clearInterval(interval);
+                    return;
+                }
+                document.getElementById("display").innerText = words[index++];
+            }, intervalTime);
+        }
+
+        function stopReading() {
+            clearInterval(interval);
+            document.getElementById("display").innerText = "";
+        }
+    </script>
+</body>
+</html>
